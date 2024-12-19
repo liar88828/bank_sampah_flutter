@@ -17,14 +17,53 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme themeColor = Theme.of(context).colorScheme;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: ,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        type: BottomNavigationBarType.fixed, // Required for fixedColor to work
+        backgroundColor: themeColor.primaryContainer, // Background color of the bar
+        selectedItemColor: themeColor.primary, // Color of the selected item
+        unselectedItemColor: themeColor.onPrimary, // Color of unselected items
+        currentIndex: 0,
+        onTap: (index) {
+          // Perform specific actions based on the tapped item
+          switch (index) {
+            case 0:
+              print('Home tapped');
+              break;
+            case 1:
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => WasteListScreen(),
+              //     ));
+              break;
+            case 2:
+              print('Favorites tapped');
+              break;
+            case 3:
+              print('Settings tapped');
+              break;
+          }
+        },
+
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.delete),
+            label: 'Sampah',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
       ),
       appBar: AppBar(
