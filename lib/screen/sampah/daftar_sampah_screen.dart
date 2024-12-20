@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class WasteListScreen extends StatefulWidget {
+  final String? typeWaste;
+
+  WasteListScreen(this.typeWaste);
+
   @override
   _WasteListScreenState createState() => _WasteListScreenState();
 }
@@ -20,7 +24,13 @@ class _WasteListScreenState extends State<WasteListScreen> {
   }
 
   Future<void> _loadWastes() async {
-    final wastes = await _dbHelper.getAllWastes();
+    List<Waste> wastes = [];
+    if (widget.typeWaste == null) {
+      wastes = await _dbHelper.getAllWastes();
+    } else {
+      wastes = await _dbHelper.getAllWastesByType(widget.typeWaste!);
+    }
+
     setState(() {
       _wastes = wastes;
     });
@@ -34,16 +44,22 @@ class _WasteListScreenState extends State<WasteListScreen> {
     );
   }
 
-  String _getTypeColor(String type) {
-    switch (type.toLowerCase()) {
-      case 'organik':
-        return '🟢';
-      case 'anorganik':
-        return '🔵';
-      case 'b3':
-        return '🔴';
+  IconData _getTypeColor(String type) {
+    switch (type) {
+      case 'Plastik':
+        return Icons.delete_outline;
+      case 'Kertas':
+        return Icons.description_outlined;
+      case 'Logam':
+        return Icons.pedal_bike_rounded;
+      case 'Elektronik':
+        return Icons.devices;
+      case 'Kaca':
+        return Icons.screenshot_monitor;
+      case 'Organik':
+        return Icons.energy_savings_leaf_sharp;
       default:
-        return '⚪';
+        return Icons.abc;
     }
   }
 
@@ -65,7 +81,7 @@ class _WasteListScreenState extends State<WasteListScreen> {
                   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      child: Text(_getTypeColor(waste.type)),
+                      child: Icon(_getTypeColor(waste.type)),
                       backgroundColor: Colors.transparent,
                     ),
                     title: Text(waste.name),
@@ -74,18 +90,19 @@ class _WasteListScreenState extends State<WasteListScreen> {
                       children: [
                         Text('Jenis: ${waste.type}'),
                         Text('Berat: ${waste.weight} kg'),
-                        Text('Tanggal: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(waste.date))}'),
+                        Text(
+                            'Tanggal: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(waste.date))}'),
                       ],
                     ),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
+                      icon: Icon(Icons.more_vert),
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('Konfirmasi'),
-                              content: Text('Apakah Anda yakin ingin menghapus data ini?'),
+                              content: Text('Pilih Opsi Untuk Mengubah ?'),
                               actions: [
                                 TextButton(
                                   child: Text('Batal'),
@@ -96,6 +113,20 @@ class _WasteListScreenState extends State<WasteListScreen> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     _deleteWaste(waste.id!);
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text('Edit'),
+                                  onPressed: () async {
+                                    Navigator.of(context).pop();
+                                    final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TambahSampahScreen(waste.id)));
+                                    if (result == true) {
+                                      _loadWastes();
+                                    }
                                   },
                                 ),
                               ],
@@ -113,7 +144,7 @@ class _WasteListScreenState extends State<WasteListScreen> {
         onPressed: () async {
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddWasteScreen()),
+            MaterialPageRoute(builder: (context) => TambahSampahScreen(null)),
           );
           if (result == true) {
             _loadWastes();

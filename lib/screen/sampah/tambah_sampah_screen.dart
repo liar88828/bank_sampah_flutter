@@ -3,12 +3,16 @@ import 'package:bank_sampah/models/waste_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AddWasteScreen extends StatefulWidget {
+class TambahSampahScreen extends StatefulWidget {
+  final int? id;
+
+  TambahSampahScreen(int? this.id);
+
   @override
-  _AddWasteScreenState createState() => _AddWasteScreenState();
+  _TambahSampahScreenState createState() => _TambahSampahScreenState();
 }
 
-class _AddWasteScreenState extends State<AddWasteScreen> {
+class _TambahSampahScreenState extends State<TambahSampahScreen> {
   final _formKey = GlobalKey<FormState>();
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
@@ -17,7 +21,39 @@ class _AddWasteScreenState extends State<AddWasteScreen> {
   String _selectedType = 'Organik';
   DateTime _selectedDate = DateTime.now();
 
-  List<String> wasteTypes = ['Organik', 'Anorganik', 'B3', 'Lainnya'];
+  List<String> wasteTypes = [
+    'Plastik',
+    'Kertas',
+    'Logam',
+    'Elektronik',
+    'Kaca',
+    'Organik',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // If there's an existing id (for update), load the data
+    if (widget.id != null) {
+      _loadWasteData(widget.id!);
+    }
+  }
+
+
+  // Method to load existing data into the form for updating
+  Future<void> _loadWasteData(int id) async {
+    final waste = await _dbHelper.getWasteById(id);
+    if (waste != null) {
+      setState(() {
+        _nameController.text = waste.name;
+        _weightController.text = waste.weight.toString();
+        _selectedType = waste.type;
+        _selectedDate = DateTime.parse(waste.date);
+      });
+    }
+  }
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -36,22 +72,30 @@ class _AddWasteScreenState extends State<AddWasteScreen> {
   void _saveWaste() async {
     if (_formKey.currentState!.validate()) {
       final waste = Waste(
+        id: widget.id,  // Pass the existing ID for update
         name: _nameController.text,
         type: _selectedType,
         weight: int.parse(_weightController.text),
         date: DateFormat('yyyy-MM-dd').format(_selectedDate),
       );
 
-      await _dbHelper.insertWaste(waste);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data sampah berhasil disimpan')),
-      );
+      if (widget.id == null) {
+        // Insert new waste if no id is provided
+        await _dbHelper.insertWaste(waste);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Data sampah berhasil disimpan')),
+        );
+      } else {
+        // Update existing waste if an id is provided
+        await _dbHelper.updateWaste(waste);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Data sampah berhasil diperbarui')),
+        );
+      }
 
       Navigator.pop(context, true);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
