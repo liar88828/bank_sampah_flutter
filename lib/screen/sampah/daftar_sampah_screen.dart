@@ -16,11 +16,20 @@ class WasteListScreen extends StatefulWidget {
 class _WasteListScreenState extends State<WasteListScreen> {
   final DatabaseHelper _dbHelper = DatabaseHelper();
   List<Waste> _wastes = [];
+  List<Waste> _filteredWastes = [];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadWastes();
+    _searchController.addListener(_filterWastes);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadWastes() async {
@@ -33,6 +42,18 @@ class _WasteListScreenState extends State<WasteListScreen> {
 
     setState(() {
       _wastes = wastes;
+      _filteredWastes = wastes; // Inisialisasi daftar yang difilter
+    });
+  }
+
+  void _filterWastes() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredWastes = _wastes.where((waste) {
+        final nameLower = waste.name.toLowerCase();
+        final typeLower = waste.type.toLowerCase();
+        return nameLower.contains(query) || typeLower.contains(query);
+      }).toList();
     });
   }
 
@@ -40,7 +61,7 @@ class _WasteListScreenState extends State<WasteListScreen> {
     await _dbHelper.deleteWaste(id);
     _loadWastes();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Data sampah berhasil dihapus')),
+      const SnackBar(content: Text('Data sampah berhasil dihapus')),
     );
   }
 
@@ -67,18 +88,34 @@ class _WasteListScreenState extends State<WasteListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Sampah'),
+        title: const Text('Daftar Sampah'),
       ),
-      body: _wastes.isEmpty
-          ? Center(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Cari sampah...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _filteredWastes.isEmpty
+                ? const Center(
               child: Text('Belum ada data sampah'),
             )
-          : ListView.builder(
-              itemCount: _wastes.length,
+                : ListView.builder(
+              itemCount: _filteredWastes.length,
               itemBuilder: (context, index) {
-                final waste = _wastes[index];
+                final waste = _filteredWastes[index];
                 return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: ListTile(
                     leading: CircleAvatar(
                       child: Icon(_getTypeColor(waste.type)),
@@ -95,28 +132,28 @@ class _WasteListScreenState extends State<WasteListScreen> {
                       ],
                     ),
                     trailing: IconButton(
-                      icon: Icon(Icons.more_vert),
+                      icon: const Icon(Icons.more_vert),
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Konfirmasi'),
-                              content: Text('Pilih Opsi Untuk Mengubah ?'),
+                              title: const Text('Konfirmasi'),
+                              content: const Text('Pilih Opsi Untuk Mengubah ?'),
                               actions: [
                                 TextButton(
-                                  child: Text('Batal'),
+                                  child: const Text('Batal'),
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                                 TextButton(
-                                  child: Text('Hapus'),
+                                  child: const Text('Hapus'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     _deleteWaste(waste.id!);
                                   },
                                 ),
                                 TextButton(
-                                  child: Text('Edit'),
+                                  child: const Text('Edit'),
                                   onPressed: () async {
                                     Navigator.of(context).pop();
                                     final result = await Navigator.push(
@@ -140,17 +177,20 @@ class _WasteListScreenState extends State<WasteListScreen> {
                 );
               },
             ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TambahSampahScreen(null)),
+            MaterialPageRoute(builder: (context) => const TambahSampahScreen(null)),
           );
           if (result == true) {
             _loadWastes();
           }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

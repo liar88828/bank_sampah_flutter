@@ -81,28 +81,28 @@ class _OpenStreetMapScreen2State extends State<OpenStreetMapScreen2> {
       ),
     ];
 
-    void addLocationMarker(tapPosition, point) {
-      // This will be triggered when a tap occurs
-      setState(() {
-        markers.add(
-          Marker(
-            point: point,
-            width: 60,
-            height: 60,
-            alignment: Alignment.centerLeft,
-            child: const Icon(
-              Icons.location_pin,
-              size: 60,
-
-              color: Colors.green, // Green color for the new marker
-            ),
-          ),
-        );
-      });
-      // Print the latitude and longitude
-      print(
-          'Tapped at Latitude: ${point.latitude}, Longitude: ${point.longitude}');
-    }
+    // void addLocationMarker(tapPosition, point) {
+    //   // This will be triggered when a tap occurs
+    //   setState(() {
+    //     markers.add(
+    //       Marker(
+    //         point: point,
+    //         width: 60,
+    //         height: 60,
+    //         alignment: Alignment.centerLeft,
+    //         child: const Icon(
+    //           Icons.location_pin,
+    //           size: 60,
+    //
+    //           color: Colors.green, // Green color for the new marker
+    //         ),
+    //       ),
+    //     );
+    //   });
+    //   // Print the latitude and longitude
+    //   print(
+    //       'Tapped at Latitude: ${point.latitude}, Longitude: ${point.longitude}');
+    // }
 
     return Scaffold(
         appBar: AppBar(

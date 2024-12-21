@@ -49,14 +49,14 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => OpenStreetMapScreen2(),
+                      builder: (context) => const OpenStreetMapScreen2(),
                     ));
                 break;
               case 3:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AboutScreen(),
+                      builder: (context) => const AboutScreen(),
                     ));
                 break;
             }
@@ -202,26 +202,26 @@ class HomePage extends StatelessWidget {
                 ))));
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          icon: Icon(icon),
-          onPressed: onPressed,
-          color: Colors.green,
-        ),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12),
-        ),
-      ],
-    );
-  }
+  // Widget _buildActionButton({
+  //   required IconData icon,
+  //   required String label,
+  //   required VoidCallback onPressed,
+  // }) {
+  //   return Column(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       IconButton(
+  //         icon: Icon(icon),
+  //         onPressed: onPressed,
+  //         color: Colors.green,
+  //       ),
+  //       Text(
+  //         label,
+  //         style: const TextStyle(fontSize: 12),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildCategoryCard(String title, IconData icon, onClick) {
     return Card(
@@ -251,90 +251,90 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildTransactionItem(
-    String title,
-    String amount,
-    String date,
-    IconData icon,
-    Color color,
-  ) {
-    return Card(
-      elevation: 1,
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.1),
-          child: Icon(icon, color: color),
-        ),
-        title: Text(title),
-        subtitle: Text(date),
-        trailing: Text(
-          amount,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildTransactionItem(
+  //   String title,
+  //   String amount,
+  //   String date,
+  //   IconData icon,
+  //   Color color,
+  // ) {
+  //   return Card(
+  //     elevation: 1,
+  //     margin: const EdgeInsets.only(bottom: 8),
+  //     child: ListTile(
+  //       leading: CircleAvatar(
+  //         backgroundColor: color.withOpacity(0.1),
+  //         child: Icon(icon, color: color),
+  //       ),
+  //       title: Text(title),
+  //       subtitle: Text(date),
+  //       trailing: Text(
+  //         amount,
+  //         style: TextStyle(
+  //           fontWeight: FontWeight.bold,
+  //           color: color,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildBalanceCard() {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Saldo Anda',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Rp 150.000',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildActionButton(
-                  icon: Icons.add,
-                  label: 'Setor',
-                  onPressed: () {
-                    // TODO: Implement deposit
-                  },
-                ),
-                _buildActionButton(
-                  icon: Icons.account_balance_wallet,
-                  label: 'Tarik',
-                  onPressed: () {
-                    // TODO: Implement withdrawal
-                  },
-                ),
-                _buildActionButton(
-                  icon: Icons.history,
-                  label: 'Riwayat',
-                  onPressed: () {
-                    // TODO: Implement history
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildBalanceCard() {
+  //   return Card(
+  //     elevation: 4,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           const Text(
+  //             'Saldo Anda',
+  //             style: TextStyle(
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 8),
+  //           const Text(
+  //             'Rp 150.000',
+  //             style: TextStyle(
+  //               fontSize: 24,
+  //               fontWeight: FontWeight.bold,
+  //               color: Colors.green,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 16),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               _buildActionButton(
+  //                 icon: Icons.add,
+  //                 label: 'Setor',
+  //                 onPressed: () {
+  //                   // TODO: Implement deposit
+  //                 },
+  //               ),
+  //               _buildActionButton(
+  //                 icon: Icons.account_balance_wallet,
+  //                 label: 'Tarik',
+  //                 onPressed: () {
+  //                   // TODO: Implement withdrawal
+  //                 },
+  //               ),
+  //               _buildActionButton(
+  //                 icon: Icons.history,
+  //                 label: 'Riwayat',
+  //                 onPressed: () {
+  //                   // TODO: Implement history
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 class IndexScreen extends StatelessWidget {
@@ -345,7 +345,7 @@ class IndexScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Welcome to Bank Sampah',
             style: TextStyle(
               fontSize: 24,
@@ -353,12 +353,12 @@ class IndexScreen extends StatelessWidget {
               color: Colors.green,
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'Recycle waste and make a better world.',
             style: TextStyle(fontSize: 16, color: Colors.grey[700]),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Expanded(
             child: GridView.count(
               crossAxisCount: 2,
@@ -430,11 +430,11 @@ class FeatureCard extends StatelessWidget {
               size: 48,
               color: Colors.green,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
